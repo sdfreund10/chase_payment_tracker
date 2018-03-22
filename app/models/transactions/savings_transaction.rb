@@ -1,0 +1,2 @@
+class SavingsTransaction < Transaction
+end

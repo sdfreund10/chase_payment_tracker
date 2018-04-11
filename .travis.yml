@@ -1,0 +1,7 @@
+services:
+  - postgresql
+before_script:
+  - psql -c 'create database chase_payment_tracker_test;' -U postgres
+test:
+  adapter: postgresql
+  database: chase_payment_tracker_test

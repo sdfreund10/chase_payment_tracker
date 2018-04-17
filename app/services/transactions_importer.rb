@@ -5,14 +5,27 @@ require 'csv'
 class TransactionsImporter
   attr_reader :account
 
-  def initialize(file_name, user, account: nil)
+  def initialize(file_name, user, account: nil, type: nil)
     @file = File.open(file_name)
     @user = user
-    @account = account 
+    @account = account
+    if ["Credit", "Debit", "Savings", nil].include? type
+      @type = type
+    else
+      raise "Must provide valid account type"
+    end
   end
 
   def account
     @account ||= find_account
+  end
+
+  def transaction_type
+    "#{@type}Transaction" unless @type.nil?
+  end
+
+  def account_type
+    "#{@type}Account" unless @type.nil?
   end
 
   def import_file_data

@@ -41,17 +41,29 @@ RSpec.describe TransactionsImporter do
     expect { importer.import_file_data }.to raise_error(RuntimeError) 
   end
 
-  it "allows user to provider transaction type" do
-    
+  it "allows user to provider transaction/account type" do
+    importer = TransactionsImporter.new(credit_file, @user, type: "Credit")
+    expect(importer.transaction_type).to eq "CreditTransaction"
+    expect(importer.account_type).to eq "CreditAccount"
   end
 
-  it "attempts to determine transaction type if none given" do
+  it "does not allow invalid types" do
+    debit_importer = TransactionsImporter.new(credit_file, @user, type: "Debit")
+    expect(debit_importer.transaction_type).to eq "DebitTransaction"
+    savings_importer = TransactionsImporter.new(credit_file, @user, type: "Savings")
+    expect(savings_importer.transaction_type).to eq "SavingsTransaction"
+    expect {
+      TransactionsImporter.new(credit_file, @user, type: "Other")
+    }.to raise_error RuntimeError
   end
 
-  it "imports without transaction subclass if none found" do
+  it "assigns nil type if none provided" do
+    importer = TransactionsImporter.new(debit_file, @user)
+    expect(importer.transaction_type).to be_nil
+    expect(importer.account_type).to be_nil
   end
 
-  it "creates new recods" do
+  it "creates new records" do
   end
 
   it "updates existing records" do

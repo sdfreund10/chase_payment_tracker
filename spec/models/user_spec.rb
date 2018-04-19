@@ -1,8 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe User, type: :model do
-  before do
-    @user = User.new(
+  before(:all) do
+    @user = User.create(
       name: "Test User", email: "sample@test.com",
       password: "foobar", password_confirmation: "foobar"
     )
@@ -29,7 +29,6 @@ RSpec.describe User, type: :model do
   end
 
   it "requires unique email" do
-    @user.save!
     new_user = User.new(
       name: "Test", email: "sample@test.com",
       password: "foobar", password_confirmation: "foobar"

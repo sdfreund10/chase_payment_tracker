@@ -43,7 +43,7 @@ class TransactionsImporter
   end
 
   def find_account
-    return unless account_number.blank?
+    return if account_number.blank?
     Account.find_or_create_by(
       user: @user, account_number: account_number
     )

@@ -7,6 +7,7 @@ RSpec.describe SessionsController, type: :controller do
       password: "test1234", password_confirmation: "test1234"
     )
   end
+
   describe "create" do
     it "logs in a user w/ valid params" do
       put(
@@ -30,6 +31,13 @@ RSpec.describe SessionsController, type: :controller do
         params: { session: { email: @user.email, password: @user.password} }
       )
       expect(session[:user_id]).to eq(@user.id)
+    end
+  end
+
+  describe "destroy" do
+    it "removes user_id from cookie" do
+      delete :destroy, params: { id: @user.id }
+      expect(session[:user_id]).to be_nil
     end
   end
 end

@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_action :set_user, only: [:update]
-  before_action :set_requester, only: [:update]
 
   def create
     @user = User.new(user_params)
@@ -12,9 +11,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if @user.nil? || @requester.nil?
-      render json: {}, status: :bad_request
-    elsif @requester&.is_admin? || @user&.token == params[:token]
+    if current_user.is_admin? || @user == current_user
       update_user
     else
       render json: {}, status: :forbidden
@@ -28,12 +25,9 @@ class UsersController < ApplicationController
            permit(:name, :email, :password, :password_confirmation)
   end
 
-  def set_requester
-    @requester = User.find_by(token: params[:token])
-  end
-
   def set_user
     @user = User.find_by(id: params[:id])
+    render json: {}, status: :bad_request if @user.nil?
   end
 
   def update_user

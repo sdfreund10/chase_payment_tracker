@@ -43,21 +43,22 @@ RSpec.describe UsersController, type: :controller do
       }
     end
 
-    it 'authenticates the user is an admin or has correct auth' do
+    it 'fails when requesting user is not admin or does not control account' do
       non_admin = User.create(
         email: 'nonadmin@test.com', name: 'Reg User',
         password: 'test1234', password_confirmation: 'test1234',
         is_admin: false
       )
-      put :update, params: { user: @params, token: non_admin.token, id: @user.id }
+      session[:user_id] = non_admin.id
+      put :update, params: { user: @params, id: @user.id }
       expect(response).to have_http_status(403)
       expect(@user.reload.name).not_to eq @params['name']
     end
 
-    it 'fails if invalid token or id sent' do
-      put :update, params: { user: @params, token: 'invalid_token', id: @user.id }
+    it "returns 400 if attempting to update non-existent user" do
+      session[:user_id] = @user_id
+      put :update, params: { user: @params, id: 1_000 }
       expect(response).to have_http_status(400)
-      expect(@user.reload.name).not_to eq @params['name']
     end
 
     it 'updates user if request sent by admin' do
@@ -66,19 +67,22 @@ RSpec.describe UsersController, type: :controller do
         password: 'test1234', password_confirmation: 'test1234',
         is_admin: true
       )
+      session[:user_id] = admin.id
 
-      put :update, params: { user: @params, token: admin.token, id: @user.id }
+      put :update, params: { user: @params, id: @user.id }
       expect(response).to have_http_status(200)
       expect(@user.reload.name).to eq @params['name']
     end
 
-    it "updates account if request contains user's token" do
-      put :update, params: { user: @params, token: @user.token, id: @user.id }
+    it "updates requester own account" do
+      session[:user_id] = @user.id
+      put :update, params: { user: @params, id: @user.id }
       expect(response).to have_http_status(200)
       expect(@user.reload.name).to eq @params['name']
     end
 
     it 'does not update w/ invalid params' do
+      session[:user_id] = @user.id
       put(
         :update,
         params: { user: @params.merge('email' => nil), token: @user.token, id: @user.id }

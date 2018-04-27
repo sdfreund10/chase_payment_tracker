@@ -3,7 +3,7 @@ require 'rails_helper'
 Dir['app/models/transactions/*.rb'].each { |f| load f }
 
 RSpec.describe TransactionsImporter do
-  before(:all) do
+  before do
     @user = User.create(
       name: 'Test User', email: 'sample@test.com',
       password: 'foobar', password_confirmation: 'foobar'

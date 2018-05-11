@@ -2,7 +2,7 @@
   "name": "chase_payment_tracker",
   "private": true,
   "dependencies": {
-    "@rails/webpacker": "^3.4.3",
+    "@rails/webpacker": "3.5",
     "babel-preset-react": "^6.24.1",
     "moment": "^2.22.1",
     "prop-types": "^15.6.1",
@@ -11,6 +11,9 @@
     "react-dom": "^16.3.2"
   },
   "devDependencies": {
-    "webpack-dev-server": "2.11.2"
+    "webpack-dev-server": "3.1.4"
+  },
+  "engines": {
+    "yarn": ">= 0.25.2"
   }
 }

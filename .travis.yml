@@ -2,13 +2,14 @@ services:
   - postgresql
 before_script:
   - psql -c 'create database chase_payment_tracker_test;' -U postgres
+  # - "export DISPLAY=:99.0"
+  # - "sh -e /etc/init.d/xvfb start"
+  - sleep 3 # give xvfb some time to start
 test:
   adapter: postgresql
   database: chase_payment_tracker_test
-language: objective-c
+dist: trusty
+sudo: required
 addons:
-  chrome: beta
-before_install:
-  - # start your web application and listen on `localhost`
-  - "/Applications/Google\\ Chrome.app/Contents/MacOS/Google\\ Chrome --headless --disable-gpu --remote-debugging-port=9222 http://localhost &"
-  ⋮
+  firefox: latest
+script: xvfb-run make test

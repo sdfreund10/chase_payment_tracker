@@ -5,3 +5,5 @@ before_script:
 test:
   adapter: postgresql
   database: chase_payment_tracker_test
+addons:
+  chrome: stable

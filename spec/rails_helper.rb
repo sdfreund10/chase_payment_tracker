@@ -4,6 +4,8 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 abort("The Rails environment is running in production mode!") if Rails.env.production?
 require 'rspec/rails'
+require 'capybara/rails'
+require "selenium/webdriver"
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
@@ -20,5 +22,13 @@ RSpec.configure do |config|
     DatabaseCleaner.cleaning do
       example.run
     end
+  end
+
+  config.before(:all, type: :system) do
+    Capybara.server = :puma, { Silent: true }
+  end
+
+  config.before(:suite) do
+    `bin/webpack`
   end
 end

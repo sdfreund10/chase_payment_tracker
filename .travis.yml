@@ -16,3 +16,6 @@ dist: trusty
 sudo: required
 addons:
   firefox: latest
+script:
+  - bundle exec rails assets:precompile
+  - bundle exec rake

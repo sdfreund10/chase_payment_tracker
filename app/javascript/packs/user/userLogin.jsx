@@ -1,11 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import Input from './input'
 
 export default class UserLogin extends React.Component {
   constructor(props){
-     super(props);
+    super(props);
 
-     this.state = { logIn: true };
+    this.state = { logIn: true, form: {} };
   }
 
   formBuilder () {
@@ -13,18 +14,24 @@ export default class UserLogin extends React.Component {
       return(
         <form>
           <h1>Log In</h1>
-          <input type='text' placeholder='Email'/>
-          <input type='text' placeholder='Password'/>
+          <Input placeholder='Email' value={this.state.form.email}
+                 handler={this.handleFormChange.bind(this)}/>
+          <Input placeholder='Password' value={this.state.form.password}
+                 handler={this.handleFormChange.bind(this)}/>
         </form>
       )
     } else {
       return(
         <form>
-          <h1>Sign Up</h1>
-          <input type='text' placeholder='Name'/>
-          <input type='text' placeholder='Email'/>
-          <input type='text' placeholder='Password'/>
-          <input type='text' placeholder='Password Confirmation'/>
+          <h1 className='form-control'>Sign Up</h1>
+          <Input placeholder='Name' value={this.state.form.name}
+                 handler={this.handleFormChange.bind(this)}/>
+          <Input placeholder='Email' value={this.state.form.email}
+                 handler={this.handleFormChange.bind(this)}/>
+          <Input placeholder='Password' value={this.state.form.password}
+                 handler={this.handleFormChange.bind(this)}/>
+          <Input placeholder='Password Confirmation' value={this.state.form.passwordConfirm}
+                 handler={this.handleFormChange.bind(this)}/>
         </form>
       )
     }
@@ -56,6 +63,10 @@ export default class UserLogin extends React.Component {
 
   toggleLogIn () {
     this.setState({logIn: !this.state.logIn});
+  }
+
+  handleFormChange (updateObject) {
+    this.setState(updateObject)
   }
 
   render () {
